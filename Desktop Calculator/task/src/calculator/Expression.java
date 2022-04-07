@@ -16,8 +16,8 @@ public class Expression {
     }
 
     static class Token {
-        private String value;
-        private TokenType type;
+        private final String value;
+        private final TokenType type;
 
         public Token(String value, TokenType type) {
             this.value = value;
@@ -62,6 +62,7 @@ public class Expression {
         return df.format(result);
     }
 
+    //Shunting yard algorithm
     private static Double computeAll(List<Token> RPN) {
         Stack<Token> tokens = new Stack<>();
 
@@ -105,7 +106,7 @@ public class Expression {
         return Double.parseDouble(tokens.pop().value);
     }
 
-
+    //re-ordering tokens according to rules of Reverse Polish Notation
     private static List<Token> getRPN(List<Token> tokens) {
         Stack<Token> operators = new Stack<>();
         List<Token> RPN = new LinkedList<>();
@@ -211,6 +212,5 @@ public class Expression {
                 .replaceAll("\\(-", "(0-")
                 .replaceAll("^-", "0-");
     }
-
 
 }

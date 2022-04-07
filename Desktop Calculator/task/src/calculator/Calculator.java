@@ -134,19 +134,18 @@ public class Calculator extends JFrame {
                         break;
 
                     case '\u221A':
-                        equationLabel.setText(equationLabel.getText()+ command + "(");
+                        equationLabel.setText(equationLabel.getText() + command + "(");
                         break;
-                    case 'x' :
+                    case 'x':
                         if (command.charAt(1) == '\u00B2') {
                             equationLabel.setText(equationLabel.getText() + "^(2)");
-                        }
-                        else {
+                        } else {
                             equationLabel.setText(equationLabel.getText() + "^(");
                         }
                         break;
                     case '\u00B1':
-                            equationLabel.setText(processNegation(equationLabel.getText()));
-                            break;
+                        equationLabel.setText(processNegation(equationLabel.getText()));
+                        break;
 
                     default:
                         String verified = verify(equationLabel.getText(), command);
@@ -159,17 +158,16 @@ public class Calculator extends JFrame {
         buttons.forEach(b -> b.addActionListener(listener));
     }
 
-    private String processNegation(String input){
-        System.out.println(input);
+    private String processNegation(String input) {
 
-            if(input.length() > 1){
-                String last = input.substring(input.length() - 2);
-                if(last.equals("(-")) return input.substring(0, input.length() - 2);
-            }
+        if (input.length() > 1) {
+            String last = input.substring(input.length() - 2);
+            if (last.equals("(-")) return input.substring(0, input.length() - 2);
+        }
 
         Pattern patternUndo = Pattern.compile("(.+)*\\(-(\\d+)");
         Matcher matcherUndo = patternUndo.matcher(input);
-        if(matcherUndo.find()){
+        if (matcherUndo.find()) {
             String expression = matcherUndo.group(1);
             String number = matcherUndo.group(2);
             return expression != null ? expression + number : number;
@@ -177,7 +175,7 @@ public class Calculator extends JFrame {
 
         Pattern pattern = Pattern.compile("(.+)*(\\d+)");
         Matcher matcher = pattern.matcher(input);
-        if(matcher.find()){
+        if (matcher.find()) {
             String expression = matcher.group(1);
             String number = matcher.group(2);
 
@@ -187,23 +185,22 @@ public class Calculator extends JFrame {
         return input + "(-";
     }
 
-    private String processParentheses(String input){
+    private String processParentheses(String input) {
         String signs = "\\+-\u00D7\u00F7";
 
-        int leftCount = (int) Stream.of(input.split("")).filter(s-> s.equals("(")).count();
-        int rightCount = (int) Stream.of(input.split("")).filter(s-> s.equals(")")).count();
+        int leftCount = (int) Stream.of(input.split("")).filter(s -> s.equals("(")).count();
+        int rightCount = (int) Stream.of(input.split("")).filter(s -> s.equals(")")).count();
 
         if (leftCount == rightCount) return input + "(";
 
         if (input.length() > 0) {
             char last = input.charAt((input.length() - 1));
-            if(last == '(' || signs.contains(String.valueOf(last))) {
+            if (last == '(' || signs.contains(String.valueOf(last))) {
                 return input + "(";
             }
         }
         return input + ")";
     }
-
 
 
     private String verify(String input, String command) {
