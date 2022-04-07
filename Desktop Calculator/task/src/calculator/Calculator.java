@@ -111,8 +111,8 @@ public class Calculator extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 String command = e.getActionCommand();
-                switch (command.charAt(0)) {
-                    case '=': {
+                switch (command) {
+                    case "=": {
                         String input = equationLabel.getText();
                         if (!input.isEmpty()) {
                             String verified = verify(input, command);
@@ -120,30 +120,34 @@ public class Calculator extends JFrame {
                         }
                     }
                     break;
-                    case 'C':
+                    case "C":
                         equationLabel.setText("");
                         resultLabel.setText("0");
                         break;
-                    case 'D':
+                    case "CE":
+                        resultLabel.setText("0");
+                        equationLabel.setText(removeLastNumber(equationLabel.getText()));
+                        break;
+
+                    case "Del":
                         String temp = equationLabel.getText();
                         equationLabel.setText(temp.substring(0, temp.length() - 1));
                         break;
 
-                    case '(':
+                    case "()":
                         equationLabel.setText(processParentheses(equationLabel.getText()));
                         break;
 
-                    case '\u221A':
+                    case "\u221A":
                         equationLabel.setText(equationLabel.getText() + command + "(");
                         break;
-                    case 'x':
-                        if (command.charAt(1) == '\u00B2') {
-                            equationLabel.setText(equationLabel.getText() + "^(2)");
-                        } else {
-                            equationLabel.setText(equationLabel.getText() + "^(");
-                        }
+                    case "x\u00B2":
+                        equationLabel.setText(equationLabel.getText() + "^(2)");
                         break;
-                    case '\u00B1':
+                    case "x\u02B8":
+                        equationLabel.setText(equationLabel.getText() + "^(");
+                        break;
+                    case "\u00B1":
                         equationLabel.setText(processNegation(equationLabel.getText()));
                         break;
 
@@ -156,6 +160,16 @@ public class Calculator extends JFrame {
         }
         Listener listener = new Listener();
         buttons.forEach(b -> b.addActionListener(listener));
+    }
+
+    private String removeLastNumber(String input) {
+        Pattern pattern = Pattern.compile("(.+)*(\\d+)$");
+        Matcher matcher = pattern.matcher(input);
+        String expression = input;
+        if (matcher.find()) {
+            expression = matcher.group(1);
+        }
+        return expression;
     }
 
     private String processNegation(String input) {
